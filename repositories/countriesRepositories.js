@@ -2,7 +2,7 @@
 const countries = require('./CountriesMockdata');
 const { json } = require('express');
 
-exports.getCountries = (countryName) => {
+exports.getCountry = (countryName) => {
     const wantedCountries = countries.filter( country => country.domainName === countryName);
     return wantedCountries;
 } 
