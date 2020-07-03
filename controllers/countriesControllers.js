@@ -1,13 +1,25 @@
-const countryRepositories = require('../repositories/countriesRepositories');
+const countriesRepositories = require('../repositories/countriesRepositories');
 const uuid = require('uuid'); //uuid needs to be installed
+const customResponses = require('../middlewares/customResponses');
+const countriesUtilities = require('../utilities/countriesUtilities');
+
 
 //get all countries
-exports.getAllCountries = (req, res) => res.success(countryRepositories.getAllCountries());
+exports.getAllCountries = (req, res) => {
+    throw "not working";
+    //res.success(countriesRepositories.getAllCountries());
+}
 
 //get a single country
 exports.getCountry = (req, res) => {
-             const {availableCountries} = req;
-             res.success(availableCountries);
+    const availableCountries = countriesRepositories.getCountry(req.params.name);
+    if (availableCountries.length !== 0) {
+        res.success(availableCountries);
+    }
+    else {
+        const countryName = countriesUtilities.capitalizeFirstLetter(req.params.name);
+        return res.notFound();
+    }           
 };
 
 // post/add a country
@@ -19,7 +31,7 @@ exports.postCountry = (req, res) => {
                 capital
             };
 
-            const countries = countryRepositories.getAllCountries();
+            const countries = countriesRepositories.getAllCountries();
             const finalCountriesList = [...countries, newCountry];
             // countries.push(newCountry);
             res.success(finalCountriesList);
@@ -27,21 +39,36 @@ exports.postCountry = (req, res) => {
 
 //update Country 
 exports.updateCountry = (req, res) => {
-    
-    const {availableCountries} = req;
-    const wantedCountryUpdates = req.body;
-    const updatedCountry = availableCountries[0];
+    const availableCountries = countriesRepositories.getCountry(req.params.name);
+    if (availableCountries.length !== 0) {
+        const wantedCountryUpdates = req.body;
+        const updatedCountry = availableCountries[0];
 
-    updatedCountry.name = wantedCountryUpdates.name ? wantedCountryUpdates.name : updatedCountry.name;
-    updatedCountry.capital = wantedCountryUpdates.capital ? wantedCountryUpdates.capital : updatedCountry.capital;
-    updatedCountry.population = wantedCountryUpdates.population ? wantedCountryUpdates.population : updatedCountry.population;
+        updatedCountry.name = wantedCountryUpdates.name ? wantedCountryUpdates.name : updatedCountry.name;
+        updatedCountry.capital = wantedCountryUpdates.capital ? wantedCountryUpdates.capital : updatedCountry.capital;
+        updatedCountry.population = wantedCountryUpdates.population ? wantedCountryUpdates.population : updatedCountry.population;
     
-    res.success(availableCountries);
+        res.success(availableCountries);
+    }
+    else {
+        const countryName = countriesUtilities.capitalizeFirstLetter(req.params.name);
+        return res.notFound();
+    } 
 } 
 
 //delete country
 exports.deleteCountry = (req, res) => {
-    const {countryName, remainingCountries} = req;
-    res.success({msg: `${countryName} was deleted.`, remainingCountries});
-}
 
+        const remainingCountries = countriesRepositories.deleteCountry(req.params.name);
+        const initialCountryListLength = countriesRepositories.getAllCountries().length;
+        const countryName = countriesUtilities.capitalizeFirstLetter(req.params.name);
+    
+        if(remainingCountries.length === initialCountryListLength) {
+             res.notFound();
+        }
+        else {
+            req.countryName = countryName;
+            req.remainingCountries = remainingCountries;
+            res.success({msg: `${countryName} was deleted.`, remainingCountries});
+        }  
+}

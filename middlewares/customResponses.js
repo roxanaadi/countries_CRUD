@@ -7,11 +7,17 @@ const customResponses = {
             payload,
         } );
     },
-    notFound( payload ) {
+    notFound( ) {
         return this.status( 404 ).json( {
             success: false,
             error: "not_found",
-            details: `We couldn't find '${payload}' in our database.`,
+            details: "The resource you are looking for is not found",
+        } );
+    },
+    serverError() {
+        return this.status( 503 ).json( {
+            success: false,
+            error: "server_error",
         } );
     },
     customedError( payload ) {

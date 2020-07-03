@@ -8,15 +8,15 @@ const router = express.Router();
 router.get('/api/countries', countryControllers.getAllCountries);
 
 // get single country
-router.get('/api/countries/:name', countryMiddlewares.countryExists, countryControllers.getCountry);
+router.get('/api/countries/:name', countryControllers.getCountry);
 
 //post a country
 router.post('/api/countries', countryMiddlewares.checkEnteredProperties, countryControllers.postCountry);
 
 //update country
-router.put('/api/countries/:name', countryMiddlewares.countryExists, countryControllers.updateCountry);
+router.put('/api/countries/:name', countryControllers.updateCountry);
 
 //delete country
-router.delete('/api/countries/:name', countryMiddlewares.whichCountryToDelete, countryControllers.deleteCountry);
+router.delete('/api/countries/:name', countryControllers.deleteCountry);
 
 module.exports = router;
