@@ -23,21 +23,16 @@ exports.getCountry = (req, res) => {
 // post/add a country
 exports.postCountry = (req, res) => {
 
-            const newCountry = {
-                id: id = uuid.v4(), 
-                name: req.body.name, 
-                capital: req.body.capital
-            };
+            const {name, capital} = req.body;
+            const newCountry = {id: uuid.v4(), name, capital};
 
             if (!newCountry.name || !newCountry.capital) {
                 return res.customedError(`Please include a name AND a capital.`);
             }
-            else {
                 const countries = countriesRepositories.getAllCountries();
                 const finalCountriesList = [...countries, newCountry];
                 // countries.push(newCountry);
                 res.success(finalCountriesList);
-            }
 };
 
 //update Country 
