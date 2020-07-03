@@ -1,5 +1,4 @@
 const countryControllers = require('../controllers/countriesControllers');
-const countryMiddlewares = require('../middlewares/countryMiddlewares');
 
 const express = require('express');
 const router = express.Router();
@@ -10,8 +9,8 @@ router.get('/api/countries', countryControllers.getAllCountries);
 // get single country
 router.get('/api/countries/:name', countryControllers.getCountry);
 
-//post a country
-router.post('/api/countries', countryMiddlewares.checkEnteredProperties, countryControllers.postCountry);
+//post a country countryMiddlewares.checkEnteredProperties,
+router.post('/api/countries', countryControllers.postCountry);
 
 //update country
 router.put('/api/countries/:name', countryControllers.updateCountry);

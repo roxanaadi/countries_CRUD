@@ -1,13 +1,11 @@
 const countriesRepositories = require('../repositories/countriesRepositories');
 const uuid = require('uuid'); //uuid needs to be installed
-const customResponses = require('../middlewares/customResponses');
 const countriesUtilities = require('../utilities/countriesUtilities');
 
 
 //get all countries
 exports.getAllCountries = (req, res) => {
-    throw "not working";
-    //res.success(countriesRepositories.getAllCountries());
+    res.success(countriesRepositories.getAllCountries());
 }
 
 //get a single country
@@ -24,17 +22,22 @@ exports.getCountry = (req, res) => {
 
 // post/add a country
 exports.postCountry = (req, res) => {
-            const {id = uuid.v4(), name, capital} = req.body;
-            newCountry = {
-                id, 
-                name, 
-                capital
+
+            const newCountry = {
+                id: id = uuid.v4(), 
+                name: req.body.name, 
+                capital: req.body.capital
             };
 
-            const countries = countriesRepositories.getAllCountries();
-            const finalCountriesList = [...countries, newCountry];
-            // countries.push(newCountry);
-            res.success(finalCountriesList);
+            if (!newCountry.name || !newCountry.capital) {
+                return res.customedError(`Please include a name AND a capital.`);
+            }
+            else {
+                const countries = countriesRepositories.getAllCountries();
+                const finalCountriesList = [...countries, newCountry];
+                // countries.push(newCountry);
+                res.success(finalCountriesList);
+            }
 };
 
 //update Country 
