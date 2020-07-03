@@ -24,7 +24,8 @@ exports.getCountry = (req, res) => {
 exports.postCountry = (req, res) => {
 
             const {name, capital} = req.body;
-            const newCountry = {id: uuid.v4(), name, capital};
+            const generateNewId = uuid.v4();
+            const newCountry = {id: generateNewId, name, capital};
 
             if (!newCountry.name || !newCountry.capital) {
                 return res.customedError(`Please include a name AND a capital.`);
